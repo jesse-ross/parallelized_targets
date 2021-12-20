@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  do_a_good_thing:
+    image: code.chs.usgs.gov:5001/jross/docker_wsl2_without_docker_desktop:v0.6
+    build:
+      context: .
+    ports:
+      - "8787:8787"
+    environment:
+      - ROOT=TRUE
+      - PASSWORD=mypass
+
+volumes:
+  data:
+
