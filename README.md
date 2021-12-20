@@ -63,4 +63,14 @@ CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }
 sbatch test_clustermq_submission.slurm
 ```
 
-This sources a simple R script to do a parallelized `foreach`.
+This sources a simple R script to do a parallelized `foreach`.  However, it is failing with an enigmatic error:
+
+```bash
+jross@denali-login2:~> cat test_slurm_submission.out
+Fri Dec 17 16:30:45 2021: [unset]:_pmi_alps_init:alps_get_placement_info returned with error -1
+Fri Dec 17 16:30:45 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
+```
+
+# Backing off of Direct Use of ClusterMQ on Denali
+
+The need for custom installation is janky and in any case it looks as though targets doesn't support containerization for this kind of parallelization [citation needed]. Since each node on denali has 80 cores, we should be able to run a lot of parallel jobs within a single container. So my current idea is to build out within-container local parallelization, and then run a shifter container on a node to do the work.
