@@ -1,7 +1,7 @@
 version: "3.8"
 services:
-  do_a_good_thing:
-    image: code.chs.usgs.gov:5001/jross/docker_wsl2_without_docker_desktop:v0.6
+  parallel_targets:
+    image: code.chs.usgs.gov:5001/jross/parallelized_targets:latest
     build:
       context: .
     ports:
