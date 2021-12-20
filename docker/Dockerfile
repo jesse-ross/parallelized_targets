@@ -7,12 +7,26 @@ RUN sed -i 's/^# set bell-style none$/set bell-style none/' /etc/inputrc
 COPY DOIRootCA2.crt /usr/local/share/ca-certificates
 RUN update-ca-certificates
 
-# Install ZeroMQ libraries
+# Dependencies: ZeroMQ library for clustermq and libglpk40 for igraph/targets
 RUN apt-get update && apt-get install -y \
+  libglpk40 \
   libzmq3-dev \
+  vim-tiny
+  #&& rm -rf /var/lib/apt/lists/*
+
+# Set a default scheduler for clustermq
+COPY .Rprofile /root/.Rprofile
+
+# Install the clustermq and targets R packages
+RUN install2.r --error \
+  clustermq \
+  targets \
+  && rm -rvf /tmp/downloaded_packages/ /tmp/*.rds
+
+RUN apt-get install -y \
+  vim-tiny \
   && rm -rf /var/lib/apt/lists/*
 
-
-RUN Rscript -e 'install.packages("clustermq")'
-
-COPY .Rprofile /root/.Rprofile
+RUN install2.r --error \
+  palmerpenguins \
+  && rm -rvf /tmp/downloaded_packages/ /tmp/*.rds
