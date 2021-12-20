@@ -74,3 +74,9 @@ Fri Dec 17 16:30:45 2021: [unset]:_pmi_init:_pmi_alps_init returned -1
 # Backing off of Direct Use of ClusterMQ on Denali
 
 The need for custom installation is janky and in any case it looks as though targets doesn't support containerization for this kind of parallelization [citation needed]. Since each node on denali has 80 cores, we should be able to run a lot of parallel jobs within a single container. So my current idea is to build out within-container local parallelization, and then run a shifter container on a node to do the work.
+
+## Things to improve/fix
+* Dockerfile reorganization to make most-likely-to-change things first
+* Better way to add the `.Rprofile`?
+* `multicore` won't work well in certain circumstances like RStudio or on Windows - probably better to target working on users' own machines with `multisession`, even though it costs more RAM.
+* Get a better understanding of how `Q(n_jobs = x)` works when `x` is greater than the number of cores.
