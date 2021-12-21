@@ -6,7 +6,7 @@ library(clustermq)
 library(rzmq)
 
 options(tidyverse.quiet = TRUE)
-tar_option_set(packages = c("tidyverse", "dataRetrieval", "cowplot"), error = 'abridge')
+tar_option_set(packages = c("tidyverse", "dataRetrieval"), error = 'abridge')
 
 
 # Load functions needed by targets below
