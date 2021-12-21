@@ -80,3 +80,29 @@ The need for custom installation is janky and in any case it looks as though tar
 * Better way to add the `.Rprofile`?
 * `multicore` won't work well in certain circumstances like RStudio or on Windows - probably better to target working on users' own machines with `multisession`, even though it costs more RAM.
 * Get a better understanding of how `Q(n_jobs = x)` works when `x` is greater than the number of cores.
+
+
+## Running example
+
+Now failing twice as efficiently!
+
+```r
+> tar_make_clustermq(log_worker = TRUE, workers = 2)
+✔ skip target oldest_active_sites
+✔ skip target nwis_inventory_MI
+• start target nwis_data_MI
+✔ skip target nwis_inventory_WI
+• start target nwis_inventory_IA
+• built target nwis_inventory_IA
+• start target nwis_data_IA
+✖ error target nwis_data_MI
+Error: Ugh, the internet data transfer failed! Try again.
+
+✖ error target nwis_data_IA
+Error: Ugh, the internet data transfer failed! Try again.
+
+Master: [2.0s 3.7% CPU]; Worker: [avg 60.7% CPU, max 296.0 Mb]
+• end pipeline
+Warning message:
+2 targets produced errors. Run tar_meta(fields = error) for the messages.
+```

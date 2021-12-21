@@ -1,20 +1,34 @@
-library(dplyr)
-library(palmerpenguins)
-library(tarchetypes)
 library(targets)
-tar_option_set(packages = c("palmerpenguins"))
-#options(clustermq.scheduler = "multiprocess")
-spp = as.character(unique(penguins$species))
+library(tarchetypes)
+library(tibble)
+options(clustermq.scheduler = "multiprocess")
+library(clustermq)
+library(rzmq)
+
+options(tidyverse.quiet = TRUE)
+tar_option_set(packages = c("tidyverse", "dataRetrieval", "cowplot"), error = 'abridge')
+
+
+# Load functions needed by targets below
+source("1_fetch/src/find_oldest_sites.R")
+source("1_fetch/src/get_site_data.R")
+source("3_visualize/src/map_sites.R")
+
+# Configuration
+states <- c('WI','MN','MI', 'IL', 'IN', 'IA')
+parameter <- c('00060')
+
+# Targets
 list(
-  tar_target(penguins_cleaned,
-             filter(penguins,
-                    ! is.na(body_mass_g),
-                    ! is.na(sex))),
+  # Identify oldest sites
+  tar_target(oldest_active_sites, find_oldest_sites(states, parameter)),
+
+  # PULL SITE DATA
   tar_map(
-    values = tibble(spp = spp),
-    names = spp,
-    tar_target(sp, filter(penguins_cleaned, species == spp)),
-    tar_target(mean_body_mass, mean(sp$body_mass_g / 1000)),
-    tar_target(male_female_ratio, sum(sp$sex == "male") / sum(sp$sex == "female"))
-    )
+    values = tibble(state_abb = states),
+    tar_target(nwis_inventory, get_state_inventory(sites_info = oldest_active_sites, state_abb)),
+    tar_target(nwis_data, get_site_data(nwis_inventory, state_abb, parameter))
+    # Insert step for tallying data here
+    # Insert step for plotting data here
+  )
 )
