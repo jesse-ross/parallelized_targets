@@ -5,7 +5,7 @@ get_site_data <- function(site_info, state, parameter) {
 
   # simulate an unreliable web service or internet connection by causing random failures
   set.seed(Sys.time()) # Make sure that the seed changes with every run (targets likes to store the seed)
-  if(runif(1) < 0.1) {
+  if(runif(1) < 0.5) {
     Sys.sleep(0.5)
     stop('Ugh, the internet data transfer failed! Try again.')
   }
@@ -41,4 +41,8 @@ get_site_data <- function(site_info, state, parameter) {
     select(State, Site, Date, Value, Quality, Parameter)
 
   return(site_data_final)
+}
+
+get_state_inventory <- function(sites_info, state) {
+  site_info <- dplyr::filter(sites_info, state_cd == state)
 }
