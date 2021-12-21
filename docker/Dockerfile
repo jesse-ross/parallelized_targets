@@ -11,8 +11,8 @@ RUN update-ca-certificates
 RUN apt-get update && apt-get install -y \
   libglpk40 \
   libzmq3-dev \
-  vim-tiny
-  #&& rm -rf /var/lib/apt/lists/*
+  vim-tiny \
+  && rm -rf /var/lib/apt/lists/*
 
 # Set a default scheduler for clustermq
 COPY .Rprofile /root/.Rprofile
@@ -20,13 +20,9 @@ COPY .Rprofile /root/.Rprofile
 # Install the clustermq and targets R packages
 RUN install2.r --error \
   clustermq \
+  dataRetrieval \
+  tarchetypes \
   targets \
-  && rm -rvf /tmp/downloaded_packages/ /tmp/*.rds
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
-RUN apt-get install -y \
-  vim-tiny \
-  && rm -rf /var/lib/apt/lists/*
-
-RUN install2.r --error \
-  palmerpenguins \
-  && rm -rvf /tmp/downloaded_packages/ /tmp/*.rds
+# installed rzmq simply because Jared had success with it, possibly remove
