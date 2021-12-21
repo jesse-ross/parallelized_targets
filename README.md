@@ -106,3 +106,14 @@ Master: [2.0s 3.7% CPU]; Worker: [avg 60.7% CPU, max 296.0 Mb]
 Warning message:
 2 targets produced errors. Run tar_meta(fields = error) for the messages.
 ```
+
+## On denali
+
+```bash
+# grab my docker image into shifter
+shifterimg pull docker:jrossusgs/parallelized-targets:latest
+# test a shell on the login node, can run R
+shifter --image=docker:jrossusgs/parallelized-targets:latest /bin/bash
+# send a job to computation node
+salloc -c 2 --image=docker:jrossusgs/parallelized-targets:latest -t 00:30:00 -A iidd shifter Rscript -e 'targets::tar_make_clustermq(workers = 2)'
+```
