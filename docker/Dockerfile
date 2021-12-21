@@ -24,5 +24,3 @@ RUN install2.r --error \
   tarchetypes \
   targets \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-
-# installed rzmq simply because Jared had success with it, possibly remove

@@ -3,7 +3,6 @@ library(tarchetypes)
 library(tibble)
 options(clustermq.scheduler = "multiprocess")
 library(clustermq)
-library(rzmq)
 
 options(tidyverse.quiet = TRUE)
 tar_option_set(packages = c("tidyverse", "dataRetrieval"), error = 'abridge')
